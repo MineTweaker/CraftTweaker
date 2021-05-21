@@ -79,7 +79,7 @@ public class SingletonDependencyContainer implements DependencyContainer {
             return (Type) constructor.newInstance(arguments);
         } catch(Exception e) {
             final Messager instanceOfClass = getInstanceOfClass(Messager.class);
-            instanceOfClass.printMessage(Diagnostic.Kind.ERROR, e.toString());
+            instanceOfClass.printMessage(Diagnostic.Kind.ERROR, String.format("Exception when trying to use %s: %s", constructor, e));
             return null;
         }
     }

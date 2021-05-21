@@ -112,4 +112,24 @@ public class IntArrayData implements ICollectionData {
         }
         return list;
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        IntArrayData that = (IntArrayData) o;
+    
+        return internal.equals(that.internal);
+    }
+    
+    @Override
+    public int hashCode() {
+        
+        return internal.hashCode();
+    }
+    
 }

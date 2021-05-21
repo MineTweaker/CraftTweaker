@@ -1,6 +1,9 @@
 package com.blamejared.crafttweaker.api.logger;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.zencode.PreprocessorMatch;
+import com.blamejared.crafttweaker.api.zencode.impl.SourceFilePreprocessed;
+import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.PriorityPreprocessor;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.logger.*;
@@ -113,18 +116,19 @@ public interface ILogger extends ScriptingEngineLogger {
     
     @Override
     default void throwingErr(String message, Throwable throwable) {
-        error(message);
-        final StringPrintStream errorStream = new StringPrintStream();
-        throwable.printStackTrace(errorStream);
-        log(LogLevel.ERROR, errorStream.getValue(), false);
+        throwing(LogLevel.ERROR, message, throwable);
     }
     
     @Override
     default void throwingWarn(String message, Throwable throwable) {
-        warning(message);
+        throwing(LogLevel.WARNING, message, throwable);
+    }
+    
+    default void throwing(LogLevel logLevel, String message, Throwable throwable) {
+        log(logLevel, message);
         final StringPrintStream errorStream = new StringPrintStream();
         throwable.printStackTrace(errorStream);
-        log(LogLevel.WARNING, errorStream.getValue(), false);
+        log(logLevel, errorStream.getValue(), false);
     }
     
     class StringPrintStream extends PrintStream {
@@ -146,7 +150,17 @@ public interface ILogger extends ScriptingEngineLogger {
     
     @Override
     default void logSourceFile(SourceFile file) {
-        info("Loading file: " + file.getFilename());
+        if(file instanceof SourceFilePreprocessed) {
+            final SourceFilePreprocessed sourceFilePreprocessed = (SourceFilePreprocessed) file;
+            final int priority = Integer.parseInt(sourceFilePreprocessed.getMatches()
+                    .get(PriorityPreprocessor.INSTANCE)
+                    .get(0)
+                    .getContent());
+            
+            info(String.format("Loading file: '%s' with priority: %s", file.getFilename(), priority));
+        } else {
+            info("Loading file: " + file.getFilename());
+        }
     }
     
     @Override

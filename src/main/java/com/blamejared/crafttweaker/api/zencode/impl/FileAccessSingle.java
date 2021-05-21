@@ -174,7 +174,7 @@ public class FileAccessSingle {
     }
 
     public SourceFile getSourceFile() {
-        return new SourceFilePreprocessed(fileName, fileContents);
+        return new SourceFilePreprocessed(fileName, fileContents, matches);
     }
 
     public boolean shouldBeLoaded() {

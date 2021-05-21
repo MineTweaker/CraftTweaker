@@ -7,9 +7,9 @@ import net.minecraftforge.fml.LogicalSide;
 
 public class ActionSetCompostable implements IUndoableAction {
     
-    private IItemStack stack;
-    private float newValue;
-    private float oldValue;
+    private final IItemStack stack;
+    private final float newValue;
+    private final float oldValue;
     
     public ActionSetCompostable(IItemStack stack, float newValue) {
         this.stack = stack;

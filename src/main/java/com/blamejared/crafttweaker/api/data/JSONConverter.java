@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.data.StringData;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import java.util.ArrayList;
@@ -35,15 +36,23 @@ public class JSONConverter {
             }
             return new ListData(dataList);
         } else if (json.isJsonObject()) {
-            final Map<String, IData> dataMap = new HashMap<>();
-            for (Map.Entry<String, JsonElement> e : json.getAsJsonObject().entrySet()) {
-                dataMap.put(e.getKey(), JSONConverter.convert(e.getValue()));
-            }
-            return new MapData(dataMap);
+            return convert(json.getAsJsonObject());
         } else {
             //Must be jsonNull
             //Otherwise, good as fallthrough I guess?
             return null;
         }
+    }
+    
+    public static MapData convert(JsonObject jsonObject) {
+        if(jsonObject == null) {
+            return null;
+        }
+        
+        final Map<String, IData> dataMap = new HashMap<>();
+        for (Map.Entry<String, JsonElement> e : jsonObject.entrySet()) {
+            dataMap.put(e.getKey(), JSONConverter.convert(e.getValue()));
+        }
+        return new MapData(dataMap);
     }
 }

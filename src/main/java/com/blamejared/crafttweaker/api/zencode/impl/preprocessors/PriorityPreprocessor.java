@@ -14,20 +14,27 @@ import java.util.List;
 @Preprocessor
 public class PriorityPreprocessor implements IPreprocessor {
     
+    public static final PriorityPreprocessor INSTANCE = new PriorityPreprocessor();
+    
+    private PriorityPreprocessor() {}
+    
     
     @Override
     public String getName() {
+        
         return "priority";
     }
     
     @Nullable
     @Override
     public String getDefaultValue() {
+        
         return "10";
     }
     
     @Override
     public boolean apply(@Nonnull FileAccessSingle file, ScriptLoadingOptions scriptLoadingOptions, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
+        
         if(preprocessorMatches.size() > 1) {
             CraftTweakerAPI.logWarning("There are more than one #priority preprocessors in the file " + file.getFileName());
         }
@@ -54,6 +61,8 @@ public class PriorityPreprocessor implements IPreprocessor {
     
     @Override
     public int getPriority() {
+        
         return 100;
     }
+    
 }

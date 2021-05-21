@@ -59,6 +59,9 @@ public class ExpandMaterial {
         hardcodedMaterials.put("GOURD", Material.GOURD);
         hardcodedMaterials.put("DRAGON_EGG", Material.DRAGON_EGG);
         hardcodedMaterials.put("CAKE", Material.CAKE);
+        
+        hardcodedMaterials.put("NETHER_PLANTS", Material.NETHER_PLANTS);
+        hardcodedMaterials.put("NETHER_WOOD", Material.NETHER_WOOD);
     }
     
     /**

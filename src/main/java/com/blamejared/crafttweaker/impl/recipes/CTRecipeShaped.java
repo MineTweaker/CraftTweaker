@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Arrays;
 
 
 @MethodsReturnNonnullByDefault
@@ -42,11 +43,7 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
         this.mirrored = mirrored;
         this.function = function;
         this.height = ingredients.length;
-        int tempWidth = ingredients[0].length;
-        for(int i = 0; i < ingredients.length; i++) {
-            tempWidth = Math.max(ingredients[i].length, tempWidth);
-        }
-        this.width = tempWidth;
+        this.width = Arrays.stream(ingredients).mapToInt(row -> row.length).max().orElse(0);
     }
     
     private IntPair calculateOffset(CraftingInventory inv) {

@@ -29,7 +29,7 @@ public abstract class ActionRecipeBase implements IRuntimeAction {
         return this.getManager().getRecipes();
     }
     
-    public IRecipeType getRecipeType() {
+    public IRecipeType<?> getRecipeType() {
         
         return this.getManager().getRecipeType();
     }

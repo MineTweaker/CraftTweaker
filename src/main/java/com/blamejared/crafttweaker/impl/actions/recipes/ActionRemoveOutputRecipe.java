@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// See AcitonRemoveRecipeByOutput
+// See ActionRemoveRecipeByOutput
 @Deprecated
 public class ActionRemoveOutputRecipe extends ActionRecipeBase {
     

@@ -53,4 +53,24 @@ public class FloatData implements INumberData {
     public String asString() {
         return getInternal().getFloat() + " as float";
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        FloatData floatData = (FloatData) o;
+    
+        return internal.equals(floatData.internal);
+    }
+    
+    @Override
+    public int hashCode() {
+        
+        return internal.hashCode();
+    }
+    
 }

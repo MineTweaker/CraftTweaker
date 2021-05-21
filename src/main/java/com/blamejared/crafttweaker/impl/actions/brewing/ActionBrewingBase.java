@@ -1,8 +1,11 @@
 package com.blamejared.crafttweaker.impl.actions.brewing;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.actions.IUndoableAction;
+import com.blamejared.crafttweaker.api.logger.LogLevel;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionBrewing;
 import net.minecraftforge.common.brewing.IBrewingRecipe;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.IRegistryDelegate;
@@ -18,10 +21,12 @@ public abstract class ActionBrewingBase implements IUndoableAction {
     private Field reagentField;
     private Field outputField;
     
+    @SuppressWarnings({"rawtypes", "unchecked"})
     protected ActionBrewingBase(List<IBrewingRecipe> recipes) {
         
         this.recipes = recipes;
         try {
+            //Raw so that the type constraints on findField work properly
             Class mixPredicate = Class.forName("net.minecraft.potion.PotionBrewing$MixPredicate");
             inputField = ObfuscationReflectionHelper.findField(mixPredicate, "field_185198_a");
             inputField.setAccessible(true);
@@ -37,32 +42,29 @@ public abstract class ActionBrewingBase implements IUndoableAction {
     
     protected Ingredient getItemReagent(Object mixInstance) {
         
-        try {
-            return (Ingredient) reagentField.get(mixInstance);
-        } catch(IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return getFromField(reagentField, mixInstance);
     }
     
     protected IRegistryDelegate<Potion> getPotionInput(Object mixInstance) {
         
-        try {
-            return (IRegistryDelegate<Potion>) inputField.get(mixInstance);
-        } catch(IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return getFromField(inputField, mixInstance);
     }
     
     protected IRegistryDelegate<Potion> getPotionOutput(Object mixInstance) {
         
+        return getFromField(outputField, mixInstance);
+    }
+    
+    @SuppressWarnings("unchecked")
+    private <T> T getFromField(Field field, Object mixInstance) {
+        
         try {
-            return (IRegistryDelegate<Potion>) outputField.get(mixInstance);
+            return (T) field.get(mixInstance);
         } catch(IllegalAccessException e) {
-            e.printStackTrace();
+            e.printStackTrace();//TODO: Remove me?
+            CraftTweakerAPI.logger.throwing(LogLevel.DEBUG, "Could not get Field: ", e);
+            return null;
         }
-        return null;
     }
     
 }

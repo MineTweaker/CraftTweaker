@@ -17,7 +17,6 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
-        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
         classpath "gradle.plugin.org.ec4j.gradle:editorconfig-gradle-plugin:0.0.3"
         classpath group: 'com.blamejared', name: 'ModTemplate', version: '1.+', changing: true
@@ -26,11 +25,11 @@ buildscript {
 apply plugin: 'com.blamejared.modtemplate'
 apply plugin: "org.ec4j.editorconfig"
 apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 apply plugin: "com.matthewprenger.cursegradle"
+
 
 //apply from: rootProject.file('common.gradle')
 
@@ -145,20 +144,22 @@ modTemplate {
 }
 
 def zenCodeDeps = [':CodeFormatter', ':CodeFormatterShared', ':JavaIntegration', ':JavaAnnotations', ':JavaBytecodeCompiler', ':JavaShared', ':Validator', ':Parser', ':CodeModel', ':Shared']
-
+def zenCodeTestDeps = [':ScriptingExample']
 
 dependencies {
     compile project(":Crafttweaker_Annotations")
     annotationProcessor project(":Crafttweaker_Annotation_Processors")
-    annotationProcessor 'org.spongepowered:mixin:0.8.1-SNAPSHOT:processor'
 
     zenCodeDeps.collect { compile project(it) }
 
     minecraft 'net.minecraftforge:forge:1.16.5-36.0.14'
     compile fg.deobf("mezz.jei:jei-1.16.4:7.6.1.65")
 
-    testCompile group: "org.junit.jupiter", name: "junit-jupiter", version: "5.4.2"
-    testRuntime group: "org.junit.jupiter", name: "junit-jupiter", version: "5.4.2"
+    testImplementation group: "org.junit.jupiter", name: "junit-jupiter", version: "5.6.2"
+    testImplementation group: "org.junit.jupiter", name: "junit-jupiter", version: "5.6.2"
+
+    zenCodeTestDeps.collect { testCompile(project(it).sourceSets.test.output) }
+    testCompile group: "org.assertj", name: "assertj-core", version: "3.19.0"
 }
 
 test {
@@ -167,7 +168,6 @@ test {
         events "PASSED", "FAILED", "SKIPPED"
     }
 }
-
 
 processResources {
     dependsOn(":StdLibs:zipItUp")
@@ -294,6 +294,12 @@ compileJava {
     //options.compilerArgs += ["-Xprefer:source", "-verbose"]
     //options.fork = true
     //options.forkOptions.executable = 'javac'
+}
+
+compileTestJava {
+    //Suppresses the warning when using Unsafe in the UnsafeHelper class.
+    options.fork = true // necessary to make -XDenableSunApiLintControl work
+    options.compilerArgs << "-XDenableSunApiLintControl"
 }
 
 idea {

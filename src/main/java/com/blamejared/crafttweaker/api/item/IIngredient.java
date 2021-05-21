@@ -166,19 +166,7 @@ public interface IIngredient extends CommandStringDisplayable {
     }
     
     static IIngredient fromIngredient(Ingredient ingredient) {
-        if(ingredient instanceof IngredientVanillaPlus) {
-            return ((IngredientVanillaPlus) ingredient).getCrTIngredient();
-        }
-        
-        if(ingredient.hasNoMatchingItems()) {
-            return new MCItemStack(ItemStack.EMPTY);
-        } else {
-            if(ingredient.getMatchingStacks().length == 1) {
-                return new MCItemStack(ingredient.getMatchingStacks()[0]);
-            } else {
-                return new MCIngredientList(Arrays.stream(ingredient.getMatchingStacks()).map(MCItemStack::new).toArray(IItemStack[]::new));
-            }
-        }
+        return IngredientConverter.fromIngredient(ingredient);
     }
     
     @ZenCodeType.Caster(implicit = true)

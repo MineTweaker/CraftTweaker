@@ -4,6 +4,11 @@ import com.blamejared.crafttweaker.impl.data.*;
 
 public class NumberConverter {
     public static IData convertNumber(Number number) {
+    
+        if(number == null) {
+            return null;
+        }
+        
         if(number instanceof Integer) {
             return new IntData(number.intValue());
         } else if(number instanceof Byte) {

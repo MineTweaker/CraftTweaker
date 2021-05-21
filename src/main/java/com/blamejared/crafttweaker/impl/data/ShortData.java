@@ -54,4 +54,24 @@ public class ShortData implements INumberData {
     public String asString() {
         return getInternal().getShort() + " as short";
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        ShortData shortData = (ShortData) o;
+    
+        return internal.equals(shortData.internal);
+    }
+    
+    @Override
+    public int hashCode() {
+        
+        return internal.hashCode();
+    }
+    
 }

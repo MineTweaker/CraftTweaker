@@ -38,6 +38,8 @@ public class ActionRemoveRecipe extends ActionRecipeBase {
         return describeFunction.apply(this);
     }
     
+    
+    @SuppressWarnings("UnusedReturnValue")
     public ActionRemoveRecipe describeDefaultRemoval(CommandStringDisplayable output) {
         
         this.describeFunction = action -> "Removing \"" + action.getRecipeTypeName() + "\" recipes with output: " + output + "\"";

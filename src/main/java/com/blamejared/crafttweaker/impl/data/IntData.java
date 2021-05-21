@@ -53,4 +53,24 @@ public class IntData implements INumberData {
     public String asString() {
         return getInternal().getInt() + " as int";
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        IntData intData = (IntData) o;
+    
+        return internal.equals(intData.internal);
+    }
+    
+    @Override
+    public int hashCode() {
+        
+        return internal.hashCode();
+    }
+    
 }
