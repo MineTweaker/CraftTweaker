@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.api.zencode.brackets.ValidatedEscapableBracke
 import com.blamejared.crafttweaker.api.zencode.impl.native_types.CrTJavaNativeConverterBuilder;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import net.minecraftforge.common.MinecraftForge;
+import org.apache.commons.lang3.tuple.Pair;
 import org.openzen.zencode.java.ScriptingEngine;
 import org.openzen.zencode.java.module.JavaNativeModule;
 import org.openzen.zencode.shared.CompileException;
@@ -153,12 +154,20 @@ public class ScriptRun {
             }
         }
         scriptingEngine.registerNativeProvided(expModule);
+
+        final Pair<JavaNativeModule, CrTJavaNativeConverterBuilder> temp = createModuleAndConverterBuilder(bep, "native_strings", "");
+        temp.getRight().getNativeExpansionConverter().addNativeMethodsToString();
+        scriptingEngine.registerNativeProvided(temp.getLeft());
     }
     
     private JavaNativeModule createModule(IgnorePrefixCasingBracketParser bep, String moduleName, String basePackage, JavaNativeModule... dependencies) {
-        JavaNativeModule module = scriptingEngine.createNativeModule(moduleName, basePackage, dependencies, new CrTJavaNativeConverterBuilder());
-        
-        
+        return createModuleAndConverterBuilder(bep, moduleName, basePackage, dependencies).getLeft();
+    }
+
+    private Pair<JavaNativeModule, CrTJavaNativeConverterBuilder> createModuleAndConverterBuilder(IgnorePrefixCasingBracketParser bep, String moduleName, String basePackage, JavaNativeModule... dependencies) {
+        CrTJavaNativeConverterBuilder javaNativeConverterBuilder = new CrTJavaNativeConverterBuilder();
+        JavaNativeModule module = scriptingEngine.createNativeModule(moduleName, basePackage, dependencies, javaNativeConverterBuilder);
+
         for(ValidatedEscapableBracketParser bracketResolver : CraftTweakerRegistry.getBracketResolvers(moduleName, scriptingEngine, module)) {
             bep.register(bracketResolver.getName(), bracketResolver);
         }
@@ -169,8 +178,8 @@ public class ScriptRun {
         for(Class<?> aClass : CraftTweakerRegistry.getClassesInPackage(moduleName)) {
             module.addClass(aClass);
         }
-        
-        return module;
+
+        return Pair.of(module, javaNativeConverterBuilder);
     }
     
     private void writeFormattedFiles(SemanticModule scripts) {

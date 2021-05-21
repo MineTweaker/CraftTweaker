@@ -9,8 +9,8 @@
  *
  * There are a ton more events that get fired, way too many to be listed here, you can find out more about them on the documentation site.
  *
- * Some Events can be cancled, for example, canceling  the MCFarmlandTrampleEvent, will prevent the farmland from being trampled.
- * Another example of a cancelable event is the MCEnderTeleportEvent, which, if cancled, will prevent any forms of ender teleportation, namely Ender Pearls and Enderman teleporting away.
+ * Some Events can be canceled, for example, canceling  the MCFarmlandTrampleEvent, will prevent the farmland from being trampled.
+ * Another example of a cancelable event is the MCEnderTeleportEvent, which, if canceled, will prevent any forms of ender teleportation, namely Ender Pearls and Enderman teleporting away.
 */
 
 // First things first, you should import the CTEventManager, which allows you to register Events.
