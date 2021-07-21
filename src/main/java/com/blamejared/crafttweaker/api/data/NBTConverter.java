@@ -61,5 +61,8 @@ public class NBTConverter {
                 return null;
         }
     }
-    
+
+    public static MapData convert(CompoundNBT nbt) {
+        return nbt == null ? null : new MapData(nbt);
+    }
 }

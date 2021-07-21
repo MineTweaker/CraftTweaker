@@ -91,6 +91,7 @@ public interface IData {
      * @docParam data "Display"
      */
     @ZenCodeType.Method
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
     default boolean contains(IData data) {
         
         return getInternal().equals(data.getInternal());
